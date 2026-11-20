@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contadores Demo · ContaBot</title>
+  <meta name="description" content="Despacho contable ficticio con ContaBot, asistente de IA hecho en n8n (proyecto escolar).">
+  <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet">
+  <style>
+    :root {
+      --azul: #1f2a5c;
+      --azul-claro: #2563eb;
+      --fondo: #f6f7fb;
+      --texto: #1f2937;
+      --suave: #6b7280;
+      --borde: #e5e7eb;
+      --chat--color-primary: #2563eb;
+      --chat--color-secondary: #1f2a5c;
+      --chat--toggle--background: #2563eb;
+      --chat--toggle--hover--background: #1d4ed8;
+      --chat--header--background: #1f2a5c;
+      --chat--header--color: #ffffff;
+      --chat--message--user--background: #2563eb;
+      --chat--message--user--color: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; color: var(--texto); background: var(--fondo); line-height: 1.55; }
+    header { background: var(--azul); color: #fff; }
+    .contenedor { max-width: 1000px; margin: 0 auto; padding: 0 16px; }
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; }
+    nav strong { font-size: 1.15rem; }
+    nav span { font-size: .85rem; opacity: .8; }
+    .hero { padding: 48px 0 56px; }
+    .hero h1 { font-size: 2.1rem; margin: 0 0 12px; line-height: 1.2; }
+    .hero p { font-size: 1.1rem; max-width: 640px; margin: 0 0 22px; opacity: .92; }
+    .boton { display: inline-block; background: #fff; color: var(--azul); font-weight: bold; padding: 12px 20px; border-radius: 8px; text-decoration: none; border: 0; cursor: pointer; font-size: 1rem; }
+    section { padding: 40px 0; }
+    h2 { color: var(--azul); margin: 0 0 18px; font-size: 1.5rem; }
+    .rejilla { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .tarjeta { background: #fff; border: 1px solid var(--borde); border-radius: 12px; padding: 18px; }
+    .tarjeta h3 { margin: 0 0 6px; font-size: 1.05rem; color: var(--azul); }
+    .tarjeta p { margin: 0; color: var(--suave); font-size: .95rem; }
+    .pasos { counter-reset: paso; display: grid; gap: 12px; }
+    .paso { background: #fff; border: 1px solid var(--borde); border-radius: 12px; padding: 16px 16px 16px 56px; position: relative; }
+    .paso::before { counter-increment: paso; content: counter(paso); position: absolute; left: 16px; top: 16px; width: 28px; height: 28px; border-radius: 50%; background: var(--azul-claro); color: #fff; font-weight: bold; display: grid; place-items: center; font-size: .9rem; }
+    .paso b { color: var(--azul); }
+    .datos { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+    .dato { background: #fff; border: 1px solid var(--borde); border-radius: 12px; padding: 18px; text-align: center; }
+    .dato .num { font-size: 2rem; font-weight: bold; color: var(--azul-claro); }
+    .dato .txt { color: var(--suave); font-size: .9rem; }
+    .aviso { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 16px; font-size: .95rem; }
+    .ejemplos { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .ejemplos span { background: #eef2ff; color: var(--azul); border-radius: 999px; padding: 6px 12px; font-size: .9rem; }
+    footer { background: var(--azul); color: #cbd5e1; font-size: .85rem; padding: 22px 0; margin-top: 20px; }
+    footer a { color: #fff; }
+    @media (max-width: 600px) { .hero h1 { font-size: 1.6rem; } .hero { padding: 32px 0 40px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="contenedor">
+      <nav>
+        <strong>Contadores Demo</strong>
+        <span>Despacho contable ficticio · proyecto escolar</span>
+      </nav>
+      <div class="hero">
+        <h1>Tu contabilidad en orden, con respuesta en segundos</h1>
+        <p>ContaBot atiende tus dudas las 24 horas, registra tu solicitud y te pasa con un contador cuando tu caso lo necesita. Una persona del despacho revisa cada solicitud antes de contactarte.</p>
+        <button class="boton" type="button" onclick="abrirChat()">Hablar con ContaBot</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="contenedor">
+    <section>
+      <h2>Servicios</h2>
+      <div class="rejilla">
+        <div class="tarjeta"><h3>Contabilidad mensual</h3><p>Para personas físicas y morales, con declaraciones mensuales.</p></div>
+        <div class="tarjeta"><h3>Declaración anual</h3><p>Preparamos y presentamos tu declaración anual.</p></div>
+        <div class="tarjeta"><h3>Nómina</h3><p>Cálculo y timbrado de la nómina de tu empresa.</p></div>
+        <div class="tarjeta"><h3>Facturación y alta en el SAT</h3><p>Facturas electrónicas (CFDI), alta y actualización en el SAT.</p></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Cómo funciona ContaBot</h2>
+      <div class="pasos">
+        <div class="paso"><b>Escribes en el chat.</b> Pregunta por servicios, horarios o precios de referencia, o pide que te contacte un asesor.</div>
+        <div class="paso"><b>Un orquestador entiende qué necesitas</b> y le pasa tu mensaje al agente indicado: preguntas frecuentes, registro de solicitud o contador.</div>
+        <div class="paso"><b>Si quieres contratar,</b> ContaBot te pide solo nombre, correo, si eres persona física o moral y el servicio.</div>
+        <div class="paso"><b>Un asesor humano aprueba tu solicitud</b> antes de registrarla y de enviarte el correo de bienvenida.</div>
+      </div>
+      <div class="ejemplos" aria-label="Ejemplos de preguntas">
+        <span>¿Cuál es su horario?</span>
+        <span>¿Qué servicios ofrecen?</span>
+        <span>Quiero contratar contabilidad mensual</span>
+        <span>¿Qué documentos necesito?</span>
+      </div>
+    </section>
+
+    <section>
+      <h2>Resultados medidos en el prototipo</h2>
+      <div class="datos">
+        <div class="dato"><div class="num">−81.6 %</div><div class="txt">tiempo de atención por prospecto (273 s a mano → 50 s con ContaBot)</div></div>
+        <div class="dato"><div class="num">0 % → 100 %</div><div class="txt">solicitudes con los 4 datos completos</div></div>
+        <div class="dato"><div class="num">6 de 6</div><div class="txt">casos de prueba correctos en la versión 2, incluido un intento de engaño</div></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="aviso">
+        <b>Antes de escribir:</b> ContaBot no da asesoría fiscal personalizada; las consultas de tu caso las revisa un contador. Nunca te pediremos tu contraseña del SAT, tu e.firma ni datos bancarios. Tus datos solo se usan para que un asesor te contacte.
+        <br><br>
+        <b>Disponibilidad:</b> el chat funciona mientras la computadora del despacho tiene n8n encendido. Si no responde, intenta más tarde.
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="contenedor">
+      Contadores Demo es un despacho <b>ficticio</b>. ContaBot V2 es un proyecto escolar (AI for Future Workforce · GENIA · Unidad 3 · Tema 3.4) hecho con n8n, Google Gemini, Supabase y Gmail. Usa solo datos inventados.
+    </div>
+  </footer>
+
+  <script type="module">
+    import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+
+    const chat = createChat({
+      webhookUrl: 'https://contabot.tail369abb.ts.net/webhook/53798190-7ac9-4c0a-be44-cf8a7527e924/chat',
+      mode: 'window',
+      loadPreviousSession: false,
+      showWelcomeScreen: false,
+      defaultLanguage: 'en',
+      initialMessages: [
+        '¡Hola! Soy ContaBot, el asistente del despacho Contadores Demo. 👋',
+        'Puedo resolver dudas sobre nuestros servicios, registrar tu solicitud o pasarte con un contador. ¿En qué te ayudo?'
+      ],
+      i18n: {
+        en: {
+          title: 'ContaBot',
+          subtitle: 'Asistente de Contadores Demo · responde en segundos',
+          footer: '',
+          getStarted: 'Nueva conversación',
+          inputPlaceholder: 'Escribe tu mensaje…',
+          closeButtonTooltip: 'Cerrar'
+        }
+      }
+    });
+
+    window.abrirChat = () => {
+      const boton = document.querySelector('.chat-window-toggle');
+      if (boton) boton.click();
+    };
+  </script>
+</body>
+</html>
